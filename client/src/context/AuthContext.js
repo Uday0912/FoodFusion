@@ -6,10 +6,10 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log('AuthContext: token in localStorage:', token);
     if (token) {
       fetchUser();
     } else {
@@ -19,13 +19,12 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      console.log('AuthContext: fetchUser called');
       const response = await axios.get('/api/auth/me');
       setUser(response.data);
-      console.log('AuthContext: user set to:', response.data);
+      setError(null);
     } catch (error) {
-      console.error('Error fetching user:', error);
       localStorage.removeItem('token');
+      setError('Session expired. Please login again.');
     } finally {
       setLoading(false);
     }
@@ -37,11 +36,10 @@ export const AuthProvider = ({ children }) => {
       const { token, user } = response.data;
       localStorage.setItem('token', token);
       setUser(user);
-      console.log('AuthContext: token set after login:', token);
-      console.log('AuthContext: user set after login:', user);
+      setError(null);
       return user;
     } catch (error) {
-      console.error('Login error:', error);
+      setError(error.response?.data?.message || 'Login failed. Please try again.');
       throw error;
     }
   };
@@ -52,9 +50,10 @@ export const AuthProvider = ({ children }) => {
       const { token, user } = response.data;
       localStorage.setItem('token', token);
       setUser(user);
+      setError(null);
       return user;
     } catch (error) {
-      console.error('Registration error:', error);
+      setError(error.response?.data?.message || 'Registration failed. Please try again.');
       throw error;
     }
   };
@@ -62,15 +61,17 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    setError(null);
   };
 
   const updateProfile = async (userData) => {
     try {
       const response = await axios.put('/api/users/profile', userData);
       setUser(response.data);
+      setError(null);
       return response.data;
     } catch (error) {
-      console.error('Profile update error:', error);
+      setError(error.response?.data?.message || 'Failed to update profile. Please try again.');
       throw error;
     }
   };
@@ -78,6 +79,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+    error,
     login,
     register,
     logout,

@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
-  direction: 'ltr', // This will be overridden by the i18n language
+  direction: 'ltr', 
   palette: {
     primary: {
       main: '#ff6b6b',

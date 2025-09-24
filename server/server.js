@@ -196,7 +196,7 @@ app.use(express.json());
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
-  process.env.FRONTEND_URL // deployed frontend
+  process.env.FRONTEND_URL
 ];
 
 app.use(cors({
@@ -227,7 +227,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Welcome route (optional)
+// Welcome route
 app.get('/api', (req, res) => {
   res.json({ message: 'Welcome to Food Fusion API' });
 });

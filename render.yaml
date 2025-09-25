@@ -13,9 +13,15 @@ services:
       # Build React app
       npm run build
       # Verify build exists
+      echo "Checking build directory:"
       ls -la build/
+      echo "Build contents:"
+      ls -la build/static/
       # Go back to root
       cd ../..
+      # Verify the build is in the right place
+      echo "Final build location:"
+      ls -la client/build/
     startCommand: cd server ; npm start
     envVars:
       - key: NODE_ENV

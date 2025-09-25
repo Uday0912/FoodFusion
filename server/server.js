@@ -97,15 +97,35 @@ app.get('/health', (req, res) => {
 // Serve React frontend in production
 if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = path.join(__dirname, '../client/build');
-  app.use(express.static(clientBuildPath));
+  console.log('Looking for React build at:', clientBuildPath);
+  
+  // Check if build directory exists
+  const fs = require('fs');
+  if (fs.existsSync(clientBuildPath)) {
+    console.log('React build directory found');
+    app.use(express.static(clientBuildPath));
+  } else {
+    console.log('React build directory NOT found, serving API only');
+  }
   
   // Handle React routing, return all requests to React app
   app.get('*', (req, res) => {
+    // Skip API routes
+    if (req.path.startsWith('/api')) {
+      return res.status(404).json({ message: 'API route not found' });
+    }
+    
     const indexPath = path.join(clientBuildPath, 'index.html');
+    console.log('Serving React app from:', indexPath);
+    
     res.sendFile(indexPath, (err) => {
       if (err) {
         console.error('Error serving React app:', err);
-        res.status(500).json({ message: 'React app not found' });
+        res.status(500).json({ 
+          message: 'React app not found',
+          path: indexPath,
+          error: err.message
+        });
       }
     });
   });

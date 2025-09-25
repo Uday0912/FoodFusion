@@ -213,7 +213,7 @@ const Home = () => {
                 <CardMedia
                   component="img"
                   height="200"
-                  image={restaurant.images[0]?.url || 'http://localhost:5001/images/food-placeholder.svg'}
+                  image={restaurant.images[0]?.url || '/images/food-placeholder.svg'}
                   alt={restaurant.name}
                   sx={{
                     objectFit: 'cover',

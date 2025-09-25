@@ -7,29 +7,16 @@ services:
       # Install root dependencies
       npm install
       # Install server dependencies
-      cd server && npm install
+      cd server && npm install && cd ..
       # Install client dependencies
-      cd ../client && npm install
+      cd client && npm install && cd ..
       # Build React app
-      npm run build
-      # Verify build exists
-      echo "Checking build directory:"
-      ls -la build/
-      echo "Build contents:"
-      ls -la build/static/
-      # Go back to root
-      cd ../..
-      # Verify the build is in the right place
-      echo "Final build location:"
-      ls -la client/build/
-      # Copy build to server directory for serving
+      cd client && npm run build && cd ..
+      # Copy build to server directory
       cp -r client/build server/
-      echo "Build copied to server directory:"
+      # Verify build was copied
+      echo "Build copied successfully:"
       ls -la server/build/
-      # Also copy to root for alternative serving
-      cp -r client/build .
-      echo "Build also copied to root:"
-      ls -la build/
     startCommand: cd server ; npm start
     envVars:
       - key: NODE_ENV

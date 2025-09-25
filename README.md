@@ -143,4 +143,4 @@ food-delivery/
 - User profile
 - Order history
 - Favorites
-- Reviews and ratings 
+- Reviews and ratings # trigger redeploy 

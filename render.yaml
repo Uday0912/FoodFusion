@@ -26,6 +26,10 @@ services:
       cp -r client/build server/
       echo "Build copied to server directory:"
       ls -la server/build/
+      # Also copy to root for alternative serving
+      cp -r client/build .
+      echo "Build also copied to root:"
+      ls -la build/
     startCommand: cd server ; npm start
     envVars:
       - key: NODE_ENV

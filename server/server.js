@@ -100,7 +100,9 @@ if (process.env.NODE_ENV === 'production') {
   const possiblePaths = [
     path.join(__dirname, 'build'), // Build copied to server directory
     path.join(__dirname, '../client/build'), // Original client build location
-    path.join(__dirname, '../build') // Alternative location
+    path.join(__dirname, '../build'), // Alternative location
+    path.join(__dirname, '../../client/build'), // Render deployment path
+    path.join(__dirname, '../../../client/build') // Alternative Render path
   ];
   
   let clientBuildPath = null;
@@ -121,6 +123,7 @@ if (process.env.NODE_ENV === 'production') {
     console.log('Serving static files from:', clientBuildPath);
   } else {
     console.log('React build directory NOT found in any location, serving API only');
+    console.log('Checked paths:', possiblePaths);
   }
   
   // Handle React routing, return all requests to React app

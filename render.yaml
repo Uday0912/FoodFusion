@@ -14,11 +14,11 @@ services:
       # Install root dependencies
       npm install
       # Install server dependencies
-      cd server && npm install && cd ..
+      cd server; npm install; cd ..
       # Install client dependencies
-      cd client && npm install && cd ..
+      cd client; npm install; cd ..
       # Build React app
-      cd client && npm run build && cd ..
+      cd client; npm run build; cd ..
       # Verify client build exists
       echo "Client build contents:"
       ls -la client/build/

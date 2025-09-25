@@ -6,12 +6,10 @@ services:
     buildCommand: |
       # Install all dependencies
       npm install
-      cd server && npm install
-      cd ../client && npm install
+      cd server; npm install; cd ..
+      cd client; npm install; cd ..
       # Build React app
-      npm run build
-      # Go back to root
-      cd ../..
+      cd client; npm run build; cd ..
       # Copy build to server directory
       cp -r client/build server/
       # Verify build exists

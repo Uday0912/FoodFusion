@@ -4,40 +4,20 @@ services:
     env: node
     plan: free
     buildCommand: |
-      # Show initial directory structure
-      echo "Initial directory structure:"
-      ls -la
-      echo "Checking for client directory:"
-      ls -la client/ || echo "Client directory not found"
-      echo "Checking for server directory:"
-      ls -la server/ || echo "Server directory not found"
-      # Install root dependencies
+      # Install all dependencies
       npm install
-      # Install server dependencies
-      cd server; npm install; cd ..
-      # Install client dependencies
-      cd client; npm install; cd ..
+      cd server && npm install
+      cd ../client && npm install
       # Build React app
-      cd client; npm run build; cd ..
-      # Verify client build exists
-      echo "Client build contents:"
-      ls -la client/build/
+      npm run build
+      # Go back to root
+      cd ../..
       # Copy build to server directory
       cp -r client/build server/
-      # Verify build was copied to server
-      echo "Server directory contents:"
-      ls -la server/
-      echo "Server build contents:"
+      # Verify build exists
+      echo "Build verification:"
       ls -la server/build/
-      # Also copy to root as backup
-      cp -r client/build .
-      echo "Root build contents:"
-      ls -la build/
-      # Show final directory structure
-      echo "Final project structure:"
-      find . -name "build" -type d
-      echo "All build directories found:"
-      find . -name "index.html" -type f
+      ls -la client/build/
     startCommand: cd server ; npm start
     envVars:
       - key: NODE_ENV

@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: food-fusion-app
+    env: node
+    plan: free
+    buildCommand: |
+      # Install root dependencies
+      npm install
+      # Install server dependencies
+      cd server && npm install
+      # Install client dependencies
+      cd ../client && npm install
+      # Build React app
+      npm run build
+      # Go back to root
+      cd ..
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        value: https://food-fusion-app.onrender.com
+      - key: ENABLE_CRON
+        value: "true"
+    healthCheckPath: /health
+    autoDeploy: true

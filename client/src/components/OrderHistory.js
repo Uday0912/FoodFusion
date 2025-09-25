@@ -12,19 +12,13 @@ import {
   Button,
   Chip,
   LinearProgress,
-  Alert,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Snackbar,
 } from '@mui/material';
-import {
-  Receipt,
-  Replay,
-  LocationOn,
-  Delete,
-} from '@mui/icons-material';
+import { Receipt, Replay, LocationOn, Delete } from '@mui/icons-material';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -82,7 +76,9 @@ const OrderHistory = () => {
       setSuccessMessage('Order deleted successfully!');
       setSnackbarOpen(true);
     } catch (error) {
+      console.error('Delete order error:', error);
       setSuccessMessage(error.response?.data?.message || 'Failed to delete order');
+      setSnackbarOpen(true);
     } finally {
       setDeleteDialogOpen(false);
       setOrderToDelete(null);

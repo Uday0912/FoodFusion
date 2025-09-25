@@ -8,7 +8,6 @@ import {
   Avatar,
   Button,
   TextField,
-  Divider,
   List,
   ListItem,
   ListItemText,
@@ -23,14 +22,11 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Chip,
   Rating
 } from '@mui/material';
 import {
   Edit as EditIcon,
   LocationOn as LocationIcon,
-  Phone as PhoneIcon,
-  Email as EmailIcon,
   Save as SaveIcon,
   Cancel as CancelIcon,
   PhotoCamera as PhotoIcon,
@@ -38,12 +34,10 @@ import {
 } from '@mui/icons-material';
 import axios from '../utils/axios';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import Snackbar from '@mui/material/Snackbar';
 
 const Profile = () => {
   const { user, updateProfile } = useAuth();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -177,10 +171,7 @@ const Profile = () => {
     }
   };
 
-  const formatAddress = (address) => {
-    if (!address) return 'No address available';
-    return address;
-  };
+  // formatting handled inline where used
 
   const handleAddToFavorites = async (restaurantId) => {
     try {

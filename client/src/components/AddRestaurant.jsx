@@ -82,7 +82,7 @@ const AddRestaurant = () => {
         ...formData,
         cuisine: formData.cuisine.split(',').map(c => c.trim()), // Convert comma-separated string to array
       };
-      const response = await axios.post('/api/restaurants', restaurantData);
+      await axios.post('/api/restaurants', restaurantData);
       setSuccess('Restaurant added successfully!');
       setFormData({
         name: '',

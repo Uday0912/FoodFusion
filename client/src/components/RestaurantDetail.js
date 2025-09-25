@@ -83,6 +83,7 @@ const RestaurantDetail = () => {
     if (user) {
       checkFavoriteStatus();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user]);
 
   const fetchRestaurant = async () => {
@@ -168,7 +169,10 @@ const RestaurantDetail = () => {
       }
     } catch (error) {
       console.error('Error toggling favorite:', error);
-      setFavSnackbar({ open: true, message: error.response?.data?.message || 'Error updating favorites. Please try again.', severity: 'error' });
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          'Error updating favorites. Please try again.';
+      setFavSnackbar({ open: true, message: errorMessage, severity: 'error' });
     }
   };
 
@@ -619,7 +623,7 @@ const RestaurantDetail = () => {
                   mt: 'auto'
                 }}>
                   <Typography variant="h6" color="primary">
-                    ${(item.price || 0).toFixed(2)}
+                    ₹{(item.price || 0).toFixed(2)}
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <IconButton 

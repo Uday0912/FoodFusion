@@ -19,7 +19,6 @@ import {
   Pagination,
   CircularProgress,
   Alert,
-  Button,
   IconButton,
   Snackbar
 } from '@mui/material';
@@ -61,6 +60,7 @@ const RestaurantList = () => {
     if (user) {
       fetchFavorites();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search, cuisine, sortBy, page, user]);
 
   const fetchRestaurants = async () => {

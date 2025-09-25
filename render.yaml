@@ -12,11 +12,20 @@ services:
       cd client && npm install && cd ..
       # Build React app
       cd client && npm run build && cd ..
+      # Verify client build exists
+      echo "Client build contents:"
+      ls -la client/build/
       # Copy build to server directory
       cp -r client/build server/
-      # Verify build was copied
-      echo "Build copied successfully:"
+      # Verify build was copied to server
+      echo "Server directory contents:"
+      ls -la server/
+      echo "Server build contents:"
       ls -la server/build/
+      # Also copy to root as backup
+      cp -r client/build .
+      echo "Root build contents:"
+      ls -la build/
     startCommand: cd server ; npm start
     envVars:
       - key: NODE_ENV

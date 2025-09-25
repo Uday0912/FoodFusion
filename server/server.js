@@ -99,8 +99,8 @@ if (process.env.NODE_ENV === 'production') {
   // Try multiple possible locations for the React build
   const possiblePaths = [
     path.join(__dirname, 'build'), // Build copied to server directory
+    path.join(__dirname, '../build'), // Build copied to root directory
     path.join(__dirname, '../client/build'), // Original client build location
-    path.join(__dirname, '../build'), // Alternative location
     path.join(__dirname, '../../client/build'), // Render deployment path
     path.join(__dirname, '../../../client/build') // Alternative Render path
   ];

@@ -96,18 +96,30 @@ app.get('/health', (req, res) => {
 
 // Serve React frontend in production
 if (process.env.NODE_ENV === 'production') {
+  const fs = require('fs');
+
+  // Allow overriding the client build path via env var
+  const envClientBuildPath = process.env.CLIENT_BUILD_PATH;
+
   // Try multiple possible locations for the React build
   const possiblePaths = [
+    envClientBuildPath,
     path.join(__dirname, 'build'), // Build copied to server directory
     path.join(__dirname, '../build'), // Build copied to root directory
     path.join(__dirname, '../client/build'), // Original client build location
     path.join(__dirname, '../../client/build'), // Render deployment path
     path.join(__dirname, '../../../client/build') // Alternative Render path
-  ];
-  
+  ].filter(Boolean);
+
   let clientBuildPath = null;
-  const fs = require('fs');
-  
+
+  console.log('Runtime directory diagnostics:');
+  console.log('  __dirname:', __dirname);
+  console.log('  process.cwd():', process.cwd());
+  if (envClientBuildPath) {
+    console.log('  CLIENT_BUILD_PATH (env):', envClientBuildPath);
+  }
+
   // Find the first existing build directory
   for (const buildPath of possiblePaths) {
     console.log('Checking for React build at:', buildPath);
@@ -117,7 +129,7 @@ if (process.env.NODE_ENV === 'production') {
       break;
     }
   }
-  
+
   if (clientBuildPath) {
     app.use(express.static(clientBuildPath));
     console.log('Serving static files from:', clientBuildPath);
@@ -125,28 +137,28 @@ if (process.env.NODE_ENV === 'production') {
     console.log('React build directory NOT found in any location, serving API only');
     console.log('Checked paths:', possiblePaths);
   }
-  
+
   // Handle React routing, return all requests to React app
   app.get('*', (req, res) => {
     // Skip API routes
     if (req.path.startsWith('/api')) {
       return res.status(404).json({ message: 'API route not found' });
     }
-    
+
     if (!clientBuildPath) {
-      return res.status(500).json({ 
+      return res.status(500).json({
         message: 'React app not built or not found',
         checkedPaths: possiblePaths
       });
     }
-    
+
     const indexPath = path.join(clientBuildPath, 'index.html');
     console.log('Serving React app from:', indexPath);
-    
+
     res.sendFile(indexPath, (err) => {
       if (err) {
         console.error('Error serving React app:', err);
-        res.status(500).json({ 
+        res.status(500).json({
           message: 'React app not found',
           path: indexPath,
           error: err.message

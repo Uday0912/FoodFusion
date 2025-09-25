@@ -30,5 +30,7 @@ services:
         value: https://food-fusion-app.onrender.com
       - key: ENABLE_CRON
         value: "true"
+      - key: CLIENT_BUILD_PATH
+        value: /opt/render/project/src/server/build
     healthCheckPath: /health
     autoDeploy: true

@@ -19,38 +19,9 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// CORS configuration for development and production
-const allowedOrigins = [
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-  'http://localhost:3001',
-  'http://192.168.0.190:3000',
-  process.env.FRONTEND_URL,
-  process.env.CLIENT_URL
-].filter(Boolean);
-
+// Simplified, permissive CORS to minimize deployment friction
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-
-    // Allow localhost in dev
-    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
-      return callback(null, true);
-    }
-
-    // Explicitly allowed origins
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    // Allow any Render-hosted frontend
-    if (/\.onrender\.com$/i.test(new URL(origin).hostname)) {
-      return callback(null, true);
-    }
-
-    console.log('CORS blocked origin:', origin);
-    return callback(new Error('Not allowed by CORS'));
-  },
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],

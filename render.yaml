@@ -4,18 +4,9 @@ services:
     env: node
     plan: free
     buildCommand: |
-      # Install all dependencies
       npm install
-      cd server; npm install; cd ..
-      cd client; npm install; cd ..
-      # Build React app
-      cd client; npm run build; cd ..
-      # Copy build to server directory
-      cp -r client/build server/
-      # Verify build exists
-      echo "Build verification:"
-      ls -la server/build/
-      ls -la client/build/
+      cd server && npm install && cd ..
+      cd client && npm install && npm run build && cd ..
     startCommand: cd server ; npm start
     envVars:
       - key: NODE_ENV
@@ -30,7 +21,5 @@ services:
         value: https://food-fusion-app.onrender.com
       - key: ENABLE_CRON
         value: "true"
-      - key: CLIENT_BUILD_PATH
-        value: /opt/render/project/src/server/build
     healthCheckPath: /health
     autoDeploy: true

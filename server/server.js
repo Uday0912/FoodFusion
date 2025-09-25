@@ -96,16 +96,31 @@ app.get('/health', (req, res) => {
 
 // Serve React frontend in production
 if (process.env.NODE_ENV === 'production') {
-  const clientBuildPath = path.join(__dirname, '../client/build');
-  console.log('Looking for React build at:', clientBuildPath);
+  // Try multiple possible locations for the React build
+  const possiblePaths = [
+    path.join(__dirname, 'build'), // Build copied to server directory
+    path.join(__dirname, '../client/build'), // Original client build location
+    path.join(__dirname, '../build') // Alternative location
+  ];
   
-  // Check if build directory exists
+  let clientBuildPath = null;
   const fs = require('fs');
-  if (fs.existsSync(clientBuildPath)) {
-    console.log('React build directory found');
+  
+  // Find the first existing build directory
+  for (const buildPath of possiblePaths) {
+    console.log('Checking for React build at:', buildPath);
+    if (fs.existsSync(buildPath)) {
+      clientBuildPath = buildPath;
+      console.log('React build directory found at:', buildPath);
+      break;
+    }
+  }
+  
+  if (clientBuildPath) {
     app.use(express.static(clientBuildPath));
+    console.log('Serving static files from:', clientBuildPath);
   } else {
-    console.log('React build directory NOT found, serving API only');
+    console.log('React build directory NOT found in any location, serving API only');
   }
   
   // Handle React routing, return all requests to React app
@@ -113,6 +128,13 @@ if (process.env.NODE_ENV === 'production') {
     // Skip API routes
     if (req.path.startsWith('/api')) {
       return res.status(404).json({ message: 'API route not found' });
+    }
+    
+    if (!clientBuildPath) {
+      return res.status(500).json({ 
+        message: 'React app not built or not found',
+        checkedPaths: possiblePaths
+      });
     }
     
     const indexPath = path.join(clientBuildPath, 'index.html');

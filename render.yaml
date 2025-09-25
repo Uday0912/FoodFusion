@@ -22,6 +22,10 @@ services:
       # Verify the build is in the right place
       echo "Final build location:"
       ls -la client/build/
+      # Copy build to server directory for serving
+      cp -r client/build server/
+      echo "Build copied to server directory:"
+      ls -la server/build/
     startCommand: cd server ; npm start
     envVars:
       - key: NODE_ENV

@@ -3,15 +3,7 @@ services:
     name: food-fusion-app
     env: node
     plan: free
-    buildCommand: |
-      npm install
-      cd server
-      npm install
-      cd ..
-      cd client
-      npm install
-      npm run build
-      cd ..
+    buildCommand: npm install ; cd server ; npm install ; cd .. ; cd client ; npm install ; npm run build ; cd ..
     startCommand: cd server ; npm start
     envVars:
       - key: NODE_ENV

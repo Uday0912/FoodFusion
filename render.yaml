@@ -4,6 +4,13 @@ services:
     env: node
     plan: free
     buildCommand: |
+      # Show initial directory structure
+      echo "Initial directory structure:"
+      ls -la
+      echo "Checking for client directory:"
+      ls -la client/ || echo "Client directory not found"
+      echo "Checking for server directory:"
+      ls -la server/ || echo "Server directory not found"
       # Install root dependencies
       npm install
       # Install server dependencies
@@ -26,6 +33,11 @@ services:
       cp -r client/build .
       echo "Root build contents:"
       ls -la build/
+      # Show final directory structure
+      echo "Final project structure:"
+      find . -name "build" -type d
+      echo "All build directories found:"
+      find . -name "index.html" -type f
     startCommand: cd server ; npm start
     envVars:
       - key: NODE_ENV

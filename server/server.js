@@ -24,35 +24,30 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
   'http://localhost:3001',
-  'http://192.168.0.190:3000', // Network access
+  'http://192.168.0.190:3000',
   process.env.FRONTEND_URL,
   process.env.CLIENT_URL
 ].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
-    // In development, be more permissive
-    if (process.env.NODE_ENV === 'development') {
-      if (allowedOrigins.includes(origin) || origin.includes('localhost') || origin.includes('127.0.0.1')) {
-        return callback(null, true);
-      }
+
+    // Allow localhost in dev
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      return callback(null, true);
     }
-    
+
+    // Explicitly allowed origins
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    
-    // In production, allow any subdomain of your main domain
-    if (process.env.NODE_ENV === 'production' && origin) {
-      const mainDomain = process.env.MAIN_DOMAIN;
-      if (mainDomain && origin.endsWith(mainDomain)) {
-        return callback(null, true);
-      }
+
+    // Allow any Render-hosted frontend
+    if (/\.onrender\.com$/i.test(new URL(origin).hostname)) {
+      return callback(null, true);
     }
-    
+
     console.log('CORS blocked origin:', origin);
     return callback(new Error('Not allowed by CORS'));
   },
